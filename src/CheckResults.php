@@ -7,23 +7,26 @@ use DateTimeInterface;
 
 class CheckResults
 {
-    protected DateTimeInterface $finishedAt;
+    /** @var DateTimeInterface $finishedAt */
+    protected $finishedAt;
 
     /** @var array<int, CheckResult> */
-    protected array $checkResults;
+    protected $checkResults;
 
     public static function fromJson(string $json): CheckResults
     {
         $properties = json_decode($json, true);
 
         $checkResults = array_map(
-            fn (array $checkResultProperties) => new CheckResult(...$checkResultProperties),
-            $properties['checkResults'],
+            function (array $checkResultProperties) {
+                return new CheckResult(...$checkResultProperties);
+            },
+            $properties['checkResults']
         );
 
         return new self(
-            finishedAt: (new DateTime())->setTimestamp($properties['finishedAt']),
-            checkResults: $checkResults,
+            (new DateTime())->setTimestamp($properties['finishedAt']),
+            $checkResults
         );
     }
 
@@ -55,7 +58,9 @@ class CheckResults
 
     public function toJson(): string
     {
-        $checkResults = array_map(fn (CheckResult $checkResult) => $checkResult->toArray(), $this->checkResults);
+        $checkResults = array_map(function (CheckResult $checkResult) {
+            return $checkResult->toArray();
+        }, $this->checkResults);
 
         return (string)json_encode([
             'finishedAt' => $this->finishedAt->getTimestamp(),

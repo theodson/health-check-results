@@ -4,11 +4,18 @@ namespace OhDear\HealthCheckResults;
 
 class CheckResult
 {
-    public const STATUS_OK = 'ok';
-    public const STATUS_WARNING = 'warning';
-    public const STATUS_FAILED = 'failed';
-    public const STATUS_CRASHED = 'crashed';
-    public const STATUS_SKIPPED = 'skipped';
+    const STATUS_OK = 'ok';
+    const STATUS_WARNING = 'warning';
+    const STATUS_FAILED = 'failed';
+    const STATUS_CRASHED = 'crashed';
+    const STATUS_SKIPPED = 'skipped';
+
+    public $name;
+    public $label = '';
+    public $notificationMessage = '';
+    public $shortSummary = '';
+    public $status = '';
+    public $meta = [];
 
     /**
      * @param string $name
@@ -25,7 +32,7 @@ class CheckResult
         string $notificationMessage = '',
         string $shortSummary = '',
         string $status = '',
-        array  $meta = [],
+        array  $meta = []
     ): self {
         return new self(...func_get_args());
     }
@@ -38,13 +45,19 @@ class CheckResult
      * @param array<int, mixed> $meta
      */
     public function __construct(
-        public string $name,
-        public string $label = '',
-        public string $notificationMessage = '',
-        public string $shortSummary = '',
-        public string $status = '',
-        public array  $meta = [],
+        string $name,
+        string $label = '',
+        string $notificationMessage = '',
+        string $shortSummary = '',
+        string $status = '',
+        array  $meta = []
     ) {
+        $this->meta = $meta;
+        $this->status = $status;
+        $this->shortSummary = $shortSummary;
+        $this->notificationMessage = $notificationMessage;
+        $this->label = $label;
+        $this->name = $name;
     }
 
     public function notificationMessage(string $notificationMessage): self
